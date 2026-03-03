@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\LoanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,5 +20,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('books', BookController::class);
+
+Route::resource('loans', LoanController::class);
 
 require __DIR__.'/auth.php';
