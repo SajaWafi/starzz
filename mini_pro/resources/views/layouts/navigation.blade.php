@@ -98,3 +98,30 @@
         </div>
     </div>
 </nav>
+<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+        {{ __('Dashboard') }}
+    </x-nav-link>
+
+    <x-nav-link :href="route('authors.index')" :active="request()->routeIs('authors.*')">
+        {{ __('المؤلفين') }}
+    </x-nav-link>
+
+    <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.*')">
+        {{ __('الكتب') }}
+    </x-nav-link>
+    
+    <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+        {{ __('التصنيفات') }}
+    </x-nav-link>
+    
+</div>
+<form method="POST" action="{{ route('logout') }}">
+    @csrf
+
+    <x-dropdown-link :href="route('logout')"
+            onclick="event.preventDefault();
+                        this.closest('form').submit();">
+        {{ __('تسجيل الخروج') }}
+    </x-dropdown-link>
+</form>

@@ -1,31 +1,37 @@
 <?php
 
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
-
+use App\Models\Category; // إضافة موديل التصنيفات
 
 class BookController extends Controller
 {
     public function index()
     {
-        $books = Book::all();
+        // استخدام with('category') لجلب اسم التصنيف بدون ضغط على قاعدة البيانات
+        $books = Book::with('category')->get(); 
         return view('books.index', compact('books'));
     }
 
     public function create()
     {
-        return view('books.create');
+        // لازم نبعثوا التصنيفات لصفحة الإضافة عشان تطلع في الـ Select Box
+        $categories = Category::all();
+        return view('books.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'author' => 'required',
-            'isbn' => 'required|unique:books',
-            'quantity' => 'required|integer'
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'isbn' => 'required|unique:books,isbn',
+            'quantity' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id', // التأكد أن التصنيف موجود
+            'published_at' => 'nullable|date',
         ]);
 
         Book::create($request->all());
@@ -41,29 +47,31 @@ class BookController extends Controller
 
     public function edit(Book $book)
     {
-        return view('books.edit', compact('book'));
+        $categories = Category::all(); // جلب التصنيفات للتعديل أيضاً
+        return view('books.edit', compact('book', 'categories'));
     }
 
     public function update(Request $request, Book $book)
     {
         $request->validate([
-            'title' => 'required',
-            'author' => 'required',
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
             'isbn' => 'required|unique:books,isbn,' . $book->id,
-            'quantity' => 'required|integer'
+            'quantity' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'published_at' => 'nullable|date',
         ]);
 
         $book->update($request->all());
 
         return redirect()->route('books.index')
-            ->with('success', 'تم تحديث الكتاب');
+            ->with('success', 'تم تحديث الكتاب بنجاح');
     }
 
     public function destroy(Book $book)
     {
         $book->delete();
-
         return redirect()->route('books.index')
-            ->with('success', 'تم حذف الكتاب');
+            ->with('success', 'تم حذف الكتاب بنجاح');
     }
 }
