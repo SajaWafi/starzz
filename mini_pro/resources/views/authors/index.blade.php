@@ -1,37 +1,102 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('📚 إدارة المكتبة - قائمة المؤلفين') }}
+            </h2>
 
-@section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>قائمة المؤلفين</h2>
-    <a href="{{ route('authors.create') }}" class="btn btn-primary">إضافة مؤلف جديد</a>
-</div>
+            @auth
+            @if(auth()->user()->role == 'admin')
+                <a href="{{ route('authors.create') }}"
+                   class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md
+                          font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+                    إضافة مؤلف جديد
+                </a>
+            @endif
+            @endauth
+        </div>
+    </x-slot>
 
-<div class="card shadow-sm">
-    <div class="card-body">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>الاسم</th>
-                    <th>العمليات</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($authors as $author)
-                <tr>
-                    <td>{{ $author->id }}</td>
-                    <td>{{ $author->name }}</td>
-                    <td>
-                        <a href="{{ route('authors.edit', $author->id) }}" class="btn btn-sm btn-warning">تعديل</a>
-                        <form action="{{ route('authors.destroy', $author->id) }}" method="POST" class="d-inline">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger" onclick="return confirm('هل أنت متأكد؟')">حذف</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            {{-- رسالة نجاح --}}
+            @if(session('success'))
+                <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 shadow-sm">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- رسالة خطأ --}}
+            @if(session('error'))
+                <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 shadow-sm">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        #
+                                    </th>
+                                    <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        الاسم
+                                    </th>
+
+                                    {{-- العمليات تظهر فقط للـ Admin --}}
+                                    @auth
+                                    @if(auth()->user()->role == 'admin')
+                                    <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        العمليات
+                                    </th>
+                                    @endif
+                                    @endauth
+                                </tr>
+                            </thead>
+
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($authors as $author)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $author->id }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $author->name }}</td>
+
+                                    @auth
+                                    @if(auth()->user()->role == 'admin')
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                        <div class="flex justify-center space-x-2 space-x-reverse">
+                                            <a href="{{ route('authors.edit', $author) }}"
+                                               class="text-indigo-600 hover:text-indigo-900">
+                                                تعديل
+                                            </a>
+
+                                            <form action="{{ route('authors.destroy', $author) }}"
+                                                  method="POST"
+                                                  class="inline"
+                                                  onsubmit="return confirm('هل أنت متأكد؟');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900">
+                                                    حذف
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                    @endif
+                                    @endauth
+                                </tr>
+                                @endforeach
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-@endsection
+</x-app-layout>

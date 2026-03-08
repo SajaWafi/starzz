@@ -114,6 +114,10 @@
     <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
         {{ __('التصنيفات') }}
     </x-nav-link>
+
+    <x-nav-link :href="route('loans.index')" :active="request()->routeIs('loans.*')">
+        {{ __('الاستعارات') }}
+    </x-nav-link>
     
 </div>
 <form method="POST" action="{{ route('logout') }}">

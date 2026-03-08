@@ -48,4 +48,27 @@ class User extends Authenticatable
             'role' => 'string',
         ];
     }
+
+    
+    // دوال مساعدة للصلاحيات
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'user';
+    }
+
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
+
+    // علاقات مع الجداول الأخرى
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
 }

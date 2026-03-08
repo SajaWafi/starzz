@@ -18,6 +18,10 @@ class BookController extends Controller
 
     public function create()
     {
+        // التحقق من الصلاحية
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'غير مصرح لك بإضافة كتب');
+        }
         // لازم نبعثوا التصنيفات لصفحة الإضافة عشان تطلع في الـ Select Box
         $categories = Category::all();
         return view('books.create', compact('categories'));
@@ -25,6 +29,11 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
+        // التحقق من الصلاحية
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
@@ -32,6 +41,7 @@ class BookController extends Controller
             'quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id', // التأكد أن التصنيف موجود
             'published_at' => 'nullable|date',
+            'description' => 'nullable|string',
         ]);
 
         Book::create($request->all());
@@ -47,12 +57,22 @@ class BookController extends Controller
 
     public function edit(Book $book)
     {
+        // التحقق من الصلاحية
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'غير مصرح لك بتعديل الكتب');
+        }
+
         $categories = Category::all(); // جلب التصنيفات للتعديل أيضاً
         return view('books.edit', compact('book', 'categories'));
     }
 
     public function update(Request $request, Book $book)
     {
+         // التحقق من الصلاحية
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
@@ -70,6 +90,11 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
+        // التحقق من الصلاحية
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'غير مصرح لك بحذف الكتب');
+        }
+        
         $book->delete();
         return redirect()->route('books.index')
             ->with('success', 'تم حذف الكتاب بنجاح');
