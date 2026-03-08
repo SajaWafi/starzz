@@ -32,10 +32,22 @@ class LoanController extends Controller
             'due_date' => 'required|date'
         ]);
 
+        $book = Book::find($request->book_id);
+        if (!$book) {
+            return redirect()->back()->with('error', 'الكتاب غير موجود');
+        }
+        if ($book->quantity < 1) {
+            return redirect()->back()->with('error', 'لا توجد نسخ متاحة من هذا الكتاب');
+        }
+
+        // إنقاص الكمية
+        $book->quantity -= 1;
+        $book->save();
+
         Loan::create($request->all());
 
         return redirect()->route('loans.index')
-            ->with('success', 'تم تسجيل الاستعارة');
+            ->with('success', 'تم تسجيل الاستعارة وتم إنقاص الكمية');
     }
 
     public function show(Loan $loan)

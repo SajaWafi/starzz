@@ -20,6 +20,11 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- نموذج البحث عن الكتب -->
+            <form method="GET" action="{{ route('books.index') }}" class="mb-6 flex flex-col md:flex-row gap-2 md:gap-4 items-center justify-end">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="ابحث عن كتاب بالاسم..." class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300 w-full md:w-64">
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">بحث</button>
+            </form>
 
             {{-- رسالة نجاح --}}
             @if(session('success'))

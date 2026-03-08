@@ -21,6 +21,9 @@ class AuthorController extends Controller
      */
     public function create()
     {
+        if (!auth()->user() || !auth()->user()->isAdmin()) {
+            abort(403, 'غير مصرح لك بإضافة مؤلفين');
+        }
         return view('authors.create');
 
     }
@@ -30,9 +33,12 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user() || !auth()->user()->isAdmin()) {
+            abort(403, 'غير مصرح لك بإضافة مؤلفين');
+        }
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'bio' => 'required|string',
+            'bio' => 'nullable|string',
         ]);
         $author = Author::create($validated);
         return redirect()->route('authors.index');
@@ -52,6 +58,9 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
+        if (!auth()->user() || !auth()->user()->isAdmin()) {
+            abort(403, 'غير مصرح لك بتعديل المؤلفين');
+        }
         return view('authors.edit', compact('author'));
 
     }
@@ -61,9 +70,12 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
+        if (!auth()->user() || !auth()->user()->isAdmin()) {
+            abort(403, 'غير مصرح لك بتعديل المؤلفين');
+        }
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'bio' => 'required|string',
+            'bio' => 'nullable|string',
         ]);
         $author->update($validated);
         return redirect()->route('authors.index');
@@ -74,6 +86,9 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
+        if (!auth()->user() || !auth()->user()->isAdmin()) {
+            abort(403, 'غير مصرح لك بحذف المؤلفين');
+        }
         $author->delete();
         return redirect()->route('authors.index');
     }

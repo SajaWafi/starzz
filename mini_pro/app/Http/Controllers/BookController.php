@@ -11,8 +11,12 @@ class BookController extends Controller
 {
     public function index()
     {
-        // استخدام with('category') لجلب اسم التصنيف بدون ضغط على قاعدة البيانات
-        $books = Book::with('category')->get(); 
+        $query = Book::with('category');
+        if (request()->has('search') && request('search') !== null && request('search') !== '') {
+            $search = request('search');
+            $query->where('title', 'like', "%$search%");
+        }
+        $books = $query->get();
         return view('books.index', compact('books'));
     }
 

@@ -98,34 +98,29 @@
         </div>
     </div>
 </nav>
-<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+<!-- شريط التنقل الرئيسي -->
+<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
         {{ __('Dashboard') }}
     </x-nav-link>
-
-    <x-nav-link :href="route('authors.index')" :active="request()->routeIs('authors.*')">
-        {{ __('المؤلفين') }}
-    </x-nav-link>
-
+    @if(auth()->user() && auth()->user()->role == 'admin')
+        <x-nav-link :href="route('authors.index')" :active="request()->routeIs('authors.*')">
+            {{ __('المؤلفين') }}
+        </x-nav-link>
+        <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+            {{ __('التصنيفات') }}
+        </x-nav-link>
+    @endif
     <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.*')">
         {{ __('الكتب') }}
     </x-nav-link>
-    
-    <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
-        {{ __('التصنيفات') }}
-    </x-nav-link>
-
     <x-nav-link :href="route('loans.index')" :active="request()->routeIs('loans.*')">
         {{ __('الاستعارات') }}
     </x-nav-link>
-    
+    <form method="POST" action="{{ route('logout') }}" class="ml-4">
+        @csrf
+        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition">
+            {{ __('تسجيل الخروج') }}
+        </button>
+    </form>
 </div>
-<form method="POST" action="{{ route('logout') }}">
-    @csrf
-
-    <x-dropdown-link :href="route('logout')"
-            onclick="event.preventDefault();
-                        this.closest('form').submit();">
-        {{ __('تسجيل الخروج') }}
-    </x-dropdown-link>
-</form>

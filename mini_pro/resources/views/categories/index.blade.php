@@ -19,25 +19,20 @@
                 <table class="min-w-full mt-4 border">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="border px-4 py-2">ID</th>
                             <th class="border px-4 py-2">الاسم</th>
-                            {{-- يظهر فقط للـ Admin --}}
-                                    @auth
-                                    @if(auth()->user()->role == 'admin')
-                                    <th class="border px-4 py-2">
-                                        العمليات
-                                    </th>
-                                    @endif
-                                    @endauth
-                            
+                            @auth
+                            @if(auth()->user()->role == 'admin')
+                            <th class="border px-4 py-2">
+                                العمليات
+                            </th>
+                            @endif
+                            @endauth
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($categories as $category)
                         <tr>
-                            <td class="border px-4 py-2">{{ $category->id }}</td>
                             <td class="border px-4 py-2">{{ $category->name }}</td>
-                                                        {{-- العمليات تظهر فقط للـ Admin --}}
                                     @auth
                                     @if(auth()->user()->role == 'admin')
 
