@@ -1,28 +1,38 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('إضافة تصنيف جديد') }}
-        </h2>
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            </div>
+            <h2 class="font-bold text-2xl text-gray-800 leading-tight">إضافة تصنيف جديد</h2>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    <div class="py-12 relative">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 relative z-10">
+            <div class="bg-white p-8 shadow-2xl sm:rounded-3xl border border-gray-100">
                 
+                <div class="mb-8 border-b border-gray-100 pb-4">
+                    <h3 class="text-lg font-bold text-gray-800">بيانات التصنيف</h3>
+                    <p class="text-sm text-gray-500">أدخل اسم التصنيف الجديد لتنظيم الكتب بشكل أفضل.</p>
+                </div>
+
                 <form action="{{ route('categories.store') }}" method="POST">
                     @csrf
 
                     <div>
-                        <x-input-label for="name" :value="__('اسم التصنيف')" />
-                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+                        <x-input-label for="name" value="اسم التصنيف *" />
+                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus placeholder="مثال: الخيال العلمي" />
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
-                    <div class="flex items-center justify-end mt-4">
-                        <a href="{{ route('categories.index') }}" class="text-gray-600 hover:text-gray-900 ml-4">إلغاء</a>
-                        <x-primary-button>
-                            {{ __('حفظ التصنيف') }}
-                        </x-primary-button>
+                    <div class="flex items-center justify-end mt-8 pt-6 border-t border-gray-100 gap-4">
+                        <a href="{{ route('categories.index') }}" class="px-6 py-2.5 text-gray-600 font-bold hover:text-gray-900 transition-colors">
+                            إلغاء
+                        </a>
+                        <button type="submit" class="inline-flex items-center justify-center px-6 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 border border-transparent rounded-xl font-bold text-sm text-white hover:from-pink-600 hover:to-rose-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+                            حفظ التصنيف
+                        </button>
                     </div>
                 </form>
 

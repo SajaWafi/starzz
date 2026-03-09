@@ -1,131 +1,82 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            تعديل كتاب
-        </h2>
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+            </div>
+            <h2 class="font-bold text-2xl text-gray-800 leading-tight">
+                تعديل كتاب: <span class="text-indigo-600">{{ $book->title }}</span>
+            </h2>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-12 relative">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 relative z-10">
+            <div class="bg-white p-8 shadow-2xl sm:rounded-3xl border border-gray-100">
 
-            <div class="bg-white p-6 shadow-sm sm:rounded-lg">
+                <div class="mb-8 border-b border-gray-100 pb-4">
+                    <h3 class="text-lg font-bold text-gray-800">تحديث بيانات الكتاب</h3>
+                    <p class="text-sm text-gray-500">قم بتعديل المعلومات أدناه واضغط على تحديث للحفظ.</p>
+                </div>
 
                 <form action="{{ route('books.update', $book->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
 
                         <div>
-                            <x-input-label for="title" value="عنوان الكتاب" />
-                            <x-text-input
-                                id="title"
-                                name="title"
-                                type="text"
-                                class="block mt-1 w-full"
-                                value="{{ $book->title }}"
-                                required
-                            />
+                            <x-input-label for="title" value="عنوان الكتاب *" />
+                            <x-text-input id="title" name="title" type="text" class="block mt-1 w-full" value="{{ $book->title }}" required />
                         </div>
 
                         <div>
-                            <x-input-label for="author" value="اسم المؤلف" />
-                            <x-text-input
-                                id="author"
-                                name="author"
-                                type="text"
-                                class="block mt-1 w-full"
-                                value="{{ $book->author }}"
-                                required
-                            />
+                            <x-input-label for="author" value="اسم المؤلف *" />
+                            <x-text-input id="author" name="author" type="text" class="block mt-1 w-full" value="{{ $book->author }}" required />
                         </div>
 
                         <div>
-                            <x-input-label for="category_id" value="التصنيف" />
-
-                            <select
-                                name="category_id"
-                                id="category_id"
-                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
-
+                            <x-input-label for="category_id" value="التصنيف *" />
+                            <select name="category_id" id="category_id" class="block mt-1 w-full border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200/50 rounded-xl shadow-sm transition-all duration-200">
                                 @foreach($categories as $category)
-
-                                    <option value="{{ $category->id }}"
-                                        {{ $book->category_id == $category->id ? 'selected' : '' }}>
-
+                                    <option value="{{ $category->id }}" {{ $book->category_id == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
-
                                     </option>
-
                                 @endforeach
-
                             </select>
                         </div>
 
                         <div>
-                            <x-input-label for="isbn" value="رقم ISBN" />
-                            <x-text-input
-                                id="isbn"
-                                name="isbn"
-                                type="text"
-                                class="block mt-1 w-full"
-                                value="{{ $book->isbn }}"
-                                required
-                            />
+                            <x-input-label for="isbn" value="رقم ISBN *" />
+                            <x-text-input id="isbn" name="isbn" type="text" class="block mt-1 w-full font-mono text-left dir-ltr" value="{{ $book->isbn }}" required />
                         </div>
 
                         <div>
                             <x-input-label for="quantity" value="الكمية المتاحة" />
-                            <x-text-input
-                                id="quantity"
-                                name="quantity"
-                                type="number"
-                                class="block mt-1 w-full"
-                                value="{{ $book->quantity }}"
-                            />
+                            <x-text-input id="quantity" name="quantity" type="number" class="block mt-1 w-full" value="{{ $book->quantity }}" min="0" />
                         </div>
 
                         <div>
                             <x-input-label for="published_at" value="تاريخ النشر" />
-                            <x-text-input
-                                id="published_at"
-                                name="published_at"
-                                type="date"
-                                class="block mt-1 w-full"
-                                value="{{ $book->published_at }}"
-                            />
+                            <x-text-input id="published_at" name="published_at" type="date" class="block mt-1 w-full text-left" value="{{ $book->published_at }}" />
                         </div>
 
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-6">
                         <x-input-label for="description" value="وصف الكتاب" />
-
-                        <textarea
-                            id="description"
-                            name="description"
-                            class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
-                            rows="3">{{ $book->description }}</textarea>
-
+                        <textarea id="description" name="description" class="block mt-1 w-full border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200/50 rounded-xl shadow-sm transition-all duration-200" rows="4">{{ $book->description }}</textarea>
                     </div>
 
-                    <div class="flex items-center justify-end mt-6 space-x-3">
-
-                        <a href="{{ route('books.index') }}"
-                           class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
-                            رجوع
+                    <div class="flex items-center justify-end mt-8 pt-6 border-t border-gray-100 gap-4">
+                        <a href="{{ route('books.index') }}" class="px-6 py-2.5 text-gray-600 font-bold hover:text-gray-900 transition-colors">
+                            إلغاء
                         </a>
-
-                        <x-primary-button>
-                            تحديث الكتاب
-                        </x-primary-button>
-
+                        <x-primary-button>تحديث الكتاب</x-primary-button>
                     </div>
 
                 </form>
-
             </div>
-
         </div>
     </div>
 </x-app-layout>
