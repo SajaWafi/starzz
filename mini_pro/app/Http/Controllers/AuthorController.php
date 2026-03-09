@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthorController extends Controller
 {
@@ -21,7 +22,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        if (!auth()->user() || !auth()->user()->isAdmin()) {
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
             abort(403, 'غير مصرح لك بإضافة مؤلفين');
         }
         return view('authors.create');
@@ -33,7 +34,7 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth()->user() || !auth()->user()->isAdmin()) {
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
             abort(403, 'غير مصرح لك بإضافة مؤلفين');
         }
         $validated = $request->validate([
@@ -58,7 +59,7 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
-        if (!auth()->user() || !auth()->user()->isAdmin()) {
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
             abort(403, 'غير مصرح لك بتعديل المؤلفين');
         }
         return view('authors.edit', compact('author'));
@@ -86,7 +87,7 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        if (!auth()->user() || !auth()->user()->isAdmin()) {
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
             abort(403, 'غير مصرح لك بحذف المؤلفين');
         }
         $author->delete();
